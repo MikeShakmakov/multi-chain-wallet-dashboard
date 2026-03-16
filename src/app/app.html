@@ -1,6 +1,5 @@
 <div class="p-4">
   <h1 class="text-2xl mb-4">Multi-Chain Wallet Dashboard</h1>
-
   <mat-form-field class="w-xs">
     <mat-label>Chains</mat-label>
     <mat-select [formControl]="form.controls.chain">
@@ -56,8 +55,42 @@
           {{ portfolio()?.nativeBalance?.convertedUsd }}
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="columns"></tr>
-      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      <tr mat-header-row *matHeaderRowDef="balanceColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: balanceColumns"></tr>
     </table>
+  }
+
+  <h2 class="text-xl mt-4">Transactions</h2>
+  @if (transactionsLoading()) {
+    <div class="small-placeholder w-xs"></div>
+  } @else if (transactionsError()) {
+    <mat-error>{{ transactionsError() }}</mat-error>
+  } @else if (transactions()) {
+    @if ((transactions()?.length ?? 0) > 0) {
+      <table mat-table [dataSource]="transactions() ?? []" class="mat-elevation-z8">
+        <ng-container matColumnDef="hash">
+          <th mat-header-cell *matHeaderCellDef>Hash</th>
+          <td mat-cell *matCellDef="let element">{{ element.displayHash }}</td>
+        </ng-container>
+        <ng-container matColumnDef="participants">
+          <th mat-header-cell *matHeaderCellDef>From / To</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.displayFrom }} -> {{ element.displayTo }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sum">
+          <th mat-header-cell *matHeaderCellDef>Sum</th>
+          <td mat-cell *matCellDef="let element">{{ element.displayValue }}</td>
+        </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let element">{{ element.displayDate | date: 'medium' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="transactionColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: transactionColumns"></tr>
+      </table>
+    } @else {
+      <div>No transactions found.</div>
+    }
   }
 </div>

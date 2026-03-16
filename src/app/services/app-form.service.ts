@@ -3,6 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChainDto } from '../interfaces/chain.interface';
 
+export type AppForm = FormGroup<{
+  chain: FormControl<ChainDto | null>;
+  address: FormControl<string | null>;
+}>;
+
 @Injectable()
 export class AppFormService {
   private readonly formBuilder = inject(FormBuilder);
@@ -10,10 +15,7 @@ export class AppFormService {
   private readonly evmAddressRegex = /^0x[a-fA-F0-9]{40}$/;
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly form: FormGroup<{
-    chain: FormControl<ChainDto | null>;
-    address: FormControl<string | null>;
-  }> = this.formBuilder.group({
+  readonly form: AppForm = this.formBuilder.group({
     // TODO error mapper
     chain: this.formBuilder.control<ChainDto | null>(null, Validators.required),
     address: this.formBuilder.control<string | null>(null),
