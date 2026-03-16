@@ -9,6 +9,14 @@ export const GET_PORTFOLIO = gql`
         decimals
         usdValue
       }
+      tokens {
+        address
+        symbol
+        balance
+        rawBalance
+        decimals
+        usdValue
+      }
     }
   }
 `;

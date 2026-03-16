@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 import { AppFormService } from './services/app-form.service';
 import { ChainsEntityService } from './services/chains.entity.service';
 import { PortfolioEntityService } from './services/portfolio.entity.service';
@@ -18,6 +19,7 @@ import { CurrencyPipe } from '@angular/common';
     FormsModule,
     MatInputModule,
     MatButtonModule,
+    MatTableModule,
     CurrencyPipe,
   ],
   templateUrl: './app.html',
@@ -33,6 +35,7 @@ export class App {
   protected readonly chains = this.chainsEntityService.chains;
   protected readonly portfolio = this.portfolioEntityService.portfolio;
   protected readonly portfolioLoading = this.portfolioEntityService.loading;
+  protected readonly columns = ['symbol', 'balance', 'usdBalance'];
 
   getBalance(): void {
     if (this.form.valid) {
@@ -40,4 +43,5 @@ export class App {
       this.portfolioEntityService.getBalanceAction.next({ chain: chain!.id, address: address! });
     }
   }
+
 }

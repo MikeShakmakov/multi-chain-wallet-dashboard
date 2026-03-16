@@ -33,6 +33,30 @@
           | currency: portfolio()?.nativeBalance?.symbol : 'symbol' : '1.0-0'
       }}.{{ portfolio()?.nativeBalance?.decimalsInt }}
     </div>
-    <div>{{ portfolio()?.nativeBalance?.convertedUsd }} $</div>
+    <div>{{ portfolio()?.nativeBalance?.convertedUsd }}</div>
+
+    <!-- tokens table -->
+    <table mat-table [dataSource]="portfolio()?.tokens ?? []" class="mat-elevation-z8">
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef>Symbol</th>
+        <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+      </ng-container>
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef>Balance</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element?.balanceInt | currency: element?.symbol : '' : '1.0-0' }}.{{
+            element?.decimalsInt
+          }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="usdBalance">
+        <th mat-header-cell *matHeaderCellDef>USD Balance</th>
+        <td mat-cell *matCellDef="let element">
+          {{ portfolio()?.nativeBalance?.convertedUsd }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
   }
 </div>
