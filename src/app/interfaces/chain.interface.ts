@@ -1,12 +1,8 @@
 export interface NativeCurrency {
-  symbol: string;
-  decimals: number;
+  symbol?: string;
 }
 
 export interface ChainDto {
-  id: string;
-  name: string;
-  chainId: number | null;
-  nativeCurrency: NativeCurrency;
-  type: string;
+  name?: string;
+  nativeCurrency?: NativeCurrency;
 }

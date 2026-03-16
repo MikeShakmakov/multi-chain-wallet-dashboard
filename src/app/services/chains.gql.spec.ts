@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ChainsHttp } from './chains.http';
+import { ChainsGQL } from './chains.gql';
 
 describe('ChainsHttp', () => {
-  let service: ChainsHttp;
+  let service: ChainsGQL;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ChainsHttp);
+    service = TestBed.inject(ChainsGQL);
   });
 
   it('should be created', () => {
