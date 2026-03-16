@@ -26,6 +26,8 @@
   <h2 class="text-xl mt-4">Balance</h2>
   @if (portfolioLoading()) {
     <div class="small-placeholder w-xs"></div>
+  } @else if (portfolioError()) {
+    <mat-error>{{portfolioError()}}</mat-error>
   } @else if (portfolio()) {
     <div>
       {{
@@ -35,7 +37,6 @@
     </div>
     <div>{{ portfolio()?.nativeBalance?.convertedUsd }}</div>
 
-    <!-- tokens table -->
     <table mat-table [dataSource]="portfolio()?.tokens ?? []" class="mat-elevation-z8">
       <ng-container matColumnDef="symbol">
         <th mat-header-cell *matHeaderCellDef>Symbol</th>

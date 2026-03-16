@@ -34,6 +34,7 @@ export class App {
   protected readonly form = this.appFormService.form;
   protected readonly chains = this.chainsEntityService.chains;
   protected readonly portfolio = this.portfolioEntityService.portfolio;
+  protected readonly portfolioError = this.portfolioEntityService.error;
   protected readonly portfolioLoading = this.portfolioEntityService.loading;
   protected readonly columns = ['symbol', 'balance', 'usdBalance'];
 

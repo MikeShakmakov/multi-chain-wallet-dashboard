@@ -14,6 +14,7 @@ export class AppFormService {
     chain: FormControl<ChainDto | null>;
     address: FormControl<string | null>;
   }> = this.formBuilder.group({
+    // TODO error mapper
     chain: this.formBuilder.control<ChainDto | null>(null, Validators.required),
     address: this.formBuilder.control<string | null>(null),
   });

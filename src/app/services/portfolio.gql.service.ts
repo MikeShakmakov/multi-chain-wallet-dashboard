@@ -1,6 +1,6 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import { filter, map } from 'rxjs';
+import { EMPTY, catchError, map, tap } from 'rxjs';
 import { PortfolioDto, PortfolioVm } from '../interfaces/portfolio.interface';
 import { GET_PORTFOLIO } from './get-portfolio.const';
 import { toDisplayBalance } from './portfolio.converter';
@@ -15,6 +15,9 @@ const hasPortfolio = (
 export class PortfolioGqlService {
   private readonly apollo = inject(Apollo);
 
+  // TODO can be mapped to control error
+  errors: WritableSignal<string | null> = signal(null);
+
   get(address: string, chainId: string) {
     return this.apollo.query<{ portfolio: PortfolioDto }>({
       query: GET_PORTFOLIO,
@@ -23,12 +26,28 @@ export class PortfolioGqlService {
         chainId,
       },
     }).pipe(
-      filter(hasPortfolio),
-      map(({ data }): PortfolioVm => ({
-        ...data.portfolio,
-        nativeBalance: toDisplayBalance(data.portfolio.nativeBalance),
-        tokens: data.portfolio.tokens.map((token) => toDisplayBalance(token)),
+      map((response) => {
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+
+        if (!hasPortfolio(response)) {
+          throw new Error('Portfolio response does not contain portfolio data');
+        }
+
+        return response.data.portfolio;
+      }),
+      tap(() => this.errors.set(null)),
+      map((portfolio): PortfolioVm => ({
+        ...portfolio,
+        nativeBalance: toDisplayBalance(portfolio.nativeBalance),
+        tokens: portfolio.tokens.map((token) => toDisplayBalance(token)),
       })),
+      catchError((error: unknown) => {
+        const message = error instanceof Error ? error.message : 'Failed to fetch portfolio';
+        this.errors.set(message);
+        return EMPTY;
+      }),
     );
   }
 }
