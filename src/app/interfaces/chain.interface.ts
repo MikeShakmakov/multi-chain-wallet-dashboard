@@ -1,8 +1,9 @@
 export interface NativeCurrency {
-  symbol?: string;
+  symbol: string;
 }
 
 export interface ChainDto {
-  name?: string;
-  nativeCurrency?: NativeCurrency;
+  id: string;
+  name: string;
+  nativeCurrency: NativeCurrency;
 }

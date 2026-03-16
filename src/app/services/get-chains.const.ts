@@ -4,6 +4,7 @@ export const GET_CHAINS = gql`
 query {
   chains {
     name
+    id
     nativeCurrency {
         symbol
       }

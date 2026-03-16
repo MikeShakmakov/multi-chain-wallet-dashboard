@@ -5,7 +5,9 @@
     <mat-label>Chains</mat-label>
     <mat-select [formControl]="form.controls.chain">
       @for (chain of chains(); track chain) {
-        <mat-option [value]="chain.name">{{chain.name}} ({{chain.nativeCurrency?.symbol}})</mat-option>
+        <mat-option [value]="chain"
+          >{{ chain.name }} ({{ chain.nativeCurrency?.symbol }})</mat-option
+        >
       }
     </mat-select>
   </mat-form-field>
@@ -13,13 +15,24 @@
   <div>
     <mat-form-field class="w-xl">
       <mat-label>Address</mat-label>
-      <input [formControl]="form.controls.address" matInput placeholder="">
+      <input [formControl]="form.controls.address" matInput placeholder="" />
     </mat-form-field>
   </div>
 
-  <button [disabled]="form.invalid || form.pristine" matButton>Show the balance</button>
+  <button (click)="getBalance()" [disabled]="form.invalid || form.pristine" matButton="outlined">
+    Show balance
+  </button>
 
-  <h2 class="text-xl">Balance</h2>
-
-
+  <h2 class="text-xl mt-4">Balance</h2>
+  @if (portfolioLoading()) {
+    <div class="small-placeholder w-xs"></div>
+  } @else if (portfolio()) {
+    <div>
+      {{
+        portfolio()?.nativeBalance?.balanceInt
+          | currency: portfolio()?.nativeBalance?.symbol : 'symbol' : '1.0-0'
+      }}.{{ portfolio()?.nativeBalance?.decimalsInt }}
+    </div>
+    <div>{{ portfolio()?.nativeBalance?.convertedUsd }} $</div>
+  }
 </div>

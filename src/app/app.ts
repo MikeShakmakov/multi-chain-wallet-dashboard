@@ -6,16 +6,38 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AppFormService } from './services/app-form.service';
 import { ChainsEntityService } from './services/chains.entity.service';
+import { PortfolioEntityService } from './services/portfolio.entity.service';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [MatSelectModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatInputModule, MatButtonModule],
+  imports: [
+    MatSelectModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    CurrencyPipe,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  providers: [AppFormService, ChainsEntityService, PortfolioEntityService],
 })
 export class App {
   private readonly appFormService = inject(AppFormService);
   private readonly chainsEntityService = inject(ChainsEntityService);
+  private readonly portfolioEntityService = inject(PortfolioEntityService);
+
   protected readonly form = this.appFormService.form;
   protected readonly chains = this.chainsEntityService.chains;
+  protected readonly portfolio = this.portfolioEntityService.portfolio;
+  protected readonly portfolioLoading = this.portfolioEntityService.loading;
+
+  getBalance(): void {
+    if (this.form.valid) {
+      const { chain, address } = this.form.value;
+      this.portfolioEntityService.getBalanceAction.next({ chain: chain!.id, address: address! });
+    }
+  }
 }
